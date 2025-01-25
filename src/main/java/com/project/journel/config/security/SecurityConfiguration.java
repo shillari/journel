@@ -32,7 +32,7 @@ public class SecurityConfiguration {
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(rq -> {
           rq.requestMatchers("/api/v1/auth/**").permitAll();
-          rq.requestMatchers("/api/v1/contacts/**").authenticated(); // TODO add the real endpoints
+          rq.requestMatchers("/api/v1/entry/**").authenticated();
         });
 
     http

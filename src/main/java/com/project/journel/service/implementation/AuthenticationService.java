@@ -59,10 +59,12 @@ public class AuthenticationService {
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    String token = jwtService.generateToken(user.get());
+    UserAccount usr = user.get();
+    String token = jwtService.generateToken(usr);
     return ResponseEntity.ok(AuthenticationResponse.builder()
         .token(token)
-        .username(user.get().getUsername())
+        .username(usr.getUsername())
+        .id(usr.getId())
         .build());
   }
 

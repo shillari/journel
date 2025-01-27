@@ -1,7 +1,10 @@
 package com.project.journel.entity.database;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -12,6 +15,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -48,9 +53,9 @@ public class Entry {
   @JoinColumn(name = "category_id", nullable = false)
   private Category category;
 
-  @OneToMany(mappedBy = "entry", cascade = CascadeType.ALL)
-  @Fetch(value = FetchMode.JOIN)
-  private List<Tag> tags;
+  @ManyToMany
+  @JoinTable(name = "entry_tag", joinColumns = @JoinColumn(name = "entry_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
+  private Set<Tag> tags = new HashSet<>();
 
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)

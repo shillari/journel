@@ -38,4 +38,5 @@ public class EntryServiceImpl implements EntryService {
     return ResponseEntity.ok(entryJson);
   }
 
+  // private boolean addCategory(int entryId, String categoryName)
 }

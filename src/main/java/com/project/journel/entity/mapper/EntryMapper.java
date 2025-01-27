@@ -1,7 +1,9 @@
 package com.project.journel.entity.mapper;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -36,8 +38,8 @@ public class EntryMapper {
         .build();
   }
 
-  public static List<Tag> mapTags(List<TagJson> tagsJson) {
-    List<Tag> tags = new ArrayList<>();
+  public static Set<Tag> mapTags(List<TagJson> tagsJson) {
+    Set<Tag> tags = new HashSet<>();
     for (TagJson t : tagsJson) {
       tags.add(Tag.builder()
           .id(t.getId())

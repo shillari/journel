@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  redis:
+    image: redis
+    container_name: redis-journel
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+  springboot-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: journel-backend
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=
+      - SPRING_DATASOURCE_USERNAME=
+      - SPRING_DATASOURCE_PASSWORD=
+      - SPRING_REDIS_HOST=
+      - SPRING_REDIS_PORT=
+      - SECRET_ENC_KEY=
+    depends_on:
+      - redis
+
+volumes:
+  redis-data:
+    driver: local

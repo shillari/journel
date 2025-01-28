@@ -3,6 +3,7 @@ package com.project.journel.entity.database;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -39,7 +40,7 @@ public class UserAccount implements UserDetails {
   @Id
   @GeneratedValue
   @Column(name = "id")
-  private Integer id;
+  private Long id;
 
   @Column(name = "username", nullable = false)
   private String username;
@@ -55,14 +56,14 @@ public class UserAccount implements UserDetails {
 
   @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
   @Fetch(value = FetchMode.JOIN)
-  private List<Entry> entries;
+  private Set<Entry> entries;
 
   @Enumerated(EnumType.STRING)
   private Role role;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(new SimpleGrantedAuthority(role.name()));
+    return Set.of(new SimpleGrantedAuthority(role.name()));
   }
 
   @Override

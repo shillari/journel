@@ -32,7 +32,8 @@ public class SecurityConfiguration {
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(rq -> {
           rq.requestMatchers("/api/v1/auth/**").permitAll();
-          rq.requestMatchers("/api/v1/entry/**").authenticated();
+          rq.anyRequest().authenticated();
+          // rq.requestMatchers("/api/v1/entry/**").authenticated();
         });
 
     http
@@ -48,7 +49,8 @@ public class SecurityConfiguration {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
     // Make the below setting as * to allow connection from any host
-    corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+    corsConfiguration.setAllowedOrigins(List.of("*"));
+    // corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT"));
     corsConfiguration.setAllowCredentials(true);
     corsConfiguration.setAllowedHeaders(List.of("*"));

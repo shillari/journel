@@ -26,9 +26,9 @@ public class Tag {
   @Id
   @GeneratedValue
   @Column(name = "id")
-  private Integer id;
+  private Long id;
 
-  @Column(name = "tag_name", nullable = false)
+  @Column(name = "tag_name", nullable = false, unique = true)
   private String tagName;
 
   @ManyToMany(mappedBy = "tags")

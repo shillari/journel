@@ -6,5 +6,9 @@ import com.project.journel.entity.EntryJson;
 
 public interface EntryService {
 
-  ResponseEntity<EntryJson> createEntry(int userId, EntryJson entryJson);
+  ResponseEntity<EntryJson> createEntry(Long userId, EntryJson entryJson);
+
+  ResponseEntity<EntryJson> getEntry(Long userId, Long entryId);
+
+  ResponseEntity<String> deleteEntry(Long userId, Long entryId);
 }

@@ -1,5 +1,6 @@
 package com.project.journel.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,4 +18,10 @@ public interface EntryRepository extends JpaRepository<Entry, Long> {
   @Modifying
   @Query("DELETE FROM Entry e WHERE e.id = :entryId")
   void deleteById(@NonNull Long entryId);
+
+  @Query("SELECT e FROM Entry e WHERE e.id IN :ids")
+  List<Entry> findEntriesByIds(List<Long> ids);
+
+  @Query("SELECT e FROM Entry e WHERE e.userAccount.id = :userId")
+  List<Entry> findAllByUser(Long userId);
 }

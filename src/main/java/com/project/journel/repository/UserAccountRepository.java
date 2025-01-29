@@ -9,4 +9,5 @@ import com.project.journel.entity.database.UserAccount;
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 
   Optional<UserAccount> findByEmail(String email);
+
 }

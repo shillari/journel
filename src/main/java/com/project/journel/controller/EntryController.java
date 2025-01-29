@@ -1,5 +1,7 @@
 package com.project.journel.controller;
 
+import java.util.List;
+
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 public class EntryController {
 
   private final EntryService entryService;
-  private final RedisTemplate<String, String> redisTemplate;
 
   @PostMapping("")
   public ResponseEntity<EntryJson> createEntry(@RequestParam Long userId, @RequestBody EntryJson entryJson) {
@@ -33,9 +34,19 @@ public class EntryController {
     return entryService.getEntry(userId, entryId);
   }
 
+  @GetMapping("/tag")
+  public ResponseEntity<List<EntryJson>> getEntriesByTag(@RequestParam Long userId, @RequestParam String tagName) {
+    return entryService.getEntriesByTag(userId, tagName);
+  }
+
   @DeleteMapping("")
   public ResponseEntity deleteEntry(@RequestParam Long userId, @RequestParam Long entryId) {
     entryService.deleteEntry(userId, entryId);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/entries")
+  public ResponseEntity<List<EntryJson>> getAllEntriesByUser(@RequestParam Long userId) {
+    return entryService.getAllEntriesByUser(userId);
   }
 }

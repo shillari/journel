@@ -1,8 +1,11 @@
 package com.project.journel.service.implementation;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -91,22 +94,63 @@ public class EntryServiceImpl implements EntryService {
   @Override
   public ResponseEntity<String> deleteEntry(Long userId, Long entryId) {
     // Verify if the user exists
-    // Optional<UserAccount> user = userRepository.findById(userId);
-    // if (user == null || !user.isPresent()) {
-    // return ResponseEntity
-    // .status(HttpStatus.NO_CONTENT).build();
-    // }
+    Optional<UserAccount> user = userRepository.findById(userId);
+    if (user == null || !user.isPresent()) {
+      return ResponseEntity
+          .status(HttpStatus.NO_CONTENT).build();
+    }
 
-    // Optional<Entry> entry = entryRepository.findById(entryId);
-    // if (entry == null || !entry.isPresent()) {
-    // return ResponseEntity
-    // .status(HttpStatus.NO_CONTENT).build();
-    // }
+    Optional<Entry> entry = entryRepository.findById(entryId);
+    if (entry == null || !entry.isPresent()) {
+      return ResponseEntity
+          .status(HttpStatus.NO_CONTENT).build();
+    }
 
-    // entryRepository.deleteById(entryId);
+    entryRepository.deleteById(entryId);
     redisService.deleteEntry(userId, entryId);
 
     return ResponseEntity.ok().body("Entry deleted.");
+  }
+
+  @Override
+  public ResponseEntity<List<EntryJson>> getEntriesByTag(Long userId, String tagName) {
+    // Verify if the user exists
+    Optional<UserAccount> user = userRepository.findById(userId);
+    if (user == null || !user.isPresent()) {
+      return ResponseEntity
+          .status(HttpStatus.NO_CONTENT).build();
+    }
+
+    List<Long> entriesIds = redisService.getEntriesByTagForUser(userId, tagName).stream()
+        .map((id) -> Long.valueOf(id))
+        .collect(Collectors.toList());
+    List<Entry> entries = entryRepository.findEntriesByIds(entriesIds);
+
+    List<EntryJson> entriesJson = new ArrayList<>();
+    for (Entry entry : entries) {
+      entriesJson.add(EntryMapper.matToEntryJson(entry));
+    }
+
+    return ResponseEntity.ok(entriesJson);
+  }
+
+  @Override
+  public ResponseEntity<List<EntryJson>> getAllEntriesByUser(Long userId) {
+    // Verify if the user exists
+    Optional<UserAccount> user = userRepository.findById(userId);
+    if (user == null || !user.isPresent()) {
+      return ResponseEntity
+          .status(HttpStatus.NO_CONTENT).build();
+    }
+
+    List<Entry> entries = entryRepository.findAllByUser(userId);
+
+    List<EntryJson> entriesJson = new ArrayList<>();
+    for (Entry entry : entries) {
+      entriesJson.add(EntryMapper.matToEntryJson(entry));
+    }
+
+    return ResponseEntity.ok(entriesJson);
   }
 
 }

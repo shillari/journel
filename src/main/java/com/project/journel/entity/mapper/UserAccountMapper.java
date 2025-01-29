@@ -1,6 +1,7 @@
 package com.project.journel.entity.mapper;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Component;
@@ -15,37 +16,32 @@ import com.project.journel.entity.database.Tag;
 import com.project.journel.entity.database.UserAccount;
 
 @Component
-public class EntryMapper {
+public class UserAccountMapper {
 
-  public static Entry mapToEntryDb(EntryJson entryjson, UserAccount userAccount) {
-    return Entry.builder()
-        .id(entryjson.getId())
-        .title(entryjson.getTitle())
-        .description(entryjson.getDescription())
-        .entryDate(entryjson.getEntryDate())
-        .userAccount(userAccount)
-        .build();
-  }
-
-  public static EntryJson matToEntryJson(Entry entry) {
-    return EntryJson.builder()
-        .id(entry.getId())
-        .title(entry.getTitle())
-        .description(entry.getDescription())
-        .entryDate(entry.getEntryDate())
-        .category(getCategoryJson(entry.getCategory()))
-        .tags(getTagsJson(entry.getTags()))
-        .userAccount(getUserAccountJson(entry.getUserAccount()))
-        .build();
-  }
-
-  private static UserAccountJson getUserAccountJson(UserAccount userAccount) {
+  public static UserAccountJson mapToUserJson(UserAccount userAccount) {
     return UserAccountJson.builder()
         .id(userAccount.getId())
         .username(userAccount.getUsername())
         .email(userAccount.getEmail())
         .birthday(userAccount.getBirthday())
+        .entries(getAllEntryJson(userAccount.getEntries()))
         .build();
+  }
+
+  private static Set<EntryJson> getAllEntryJson(Set<Entry> entries) {
+    Set<EntryJson> entriesJson = new HashSet<>();
+    for (Entry entry : entries) {
+      entriesJson.add(EntryJson.builder()
+          .id(entry.getId())
+          .title(entry.getTitle())
+          .description(entry.getDescription())
+          .entryDate(entry.getEntryDate())
+          .category(getCategoryJson(entry.getCategory()))
+          .tags(getTagsJson(entry.getTags()))
+          .build());
+    }
+
+    return entriesJson;
   }
 
   private static CategoryJson getCategoryJson(Category category) {
@@ -66,5 +62,4 @@ public class EntryMapper {
     }
     return tagsJson;
   }
-
 }

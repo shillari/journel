@@ -2,6 +2,7 @@ package com.project.journel.entity;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class UserAccountJson {
 
   @JsonProperty("id")
-  private int id;
+  private Long id;
   @JsonProperty("username")
   private String username;
   @JsonProperty("email")
@@ -25,6 +26,6 @@ public class UserAccountJson {
   @JsonProperty("birthday")
   private Date birthday;
   @JsonProperty("entries")
-  private List<EntryJson> entries;
+  private Set<EntryJson> entries;
 
 }

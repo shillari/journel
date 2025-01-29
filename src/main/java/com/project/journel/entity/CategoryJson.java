@@ -2,6 +2,7 @@ package com.project.journel.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -16,9 +17,10 @@ import lombok.NoArgsConstructor;
 public class CategoryJson {
 
   @JsonProperty("id")
-  private int id;
+  private Long id;
   @JsonProperty("category_name")
   private String categoryName;
+  @JsonIgnore
   @JsonProperty("entries")
   private List<EntryJson> entries;
 }

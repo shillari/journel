@@ -45,8 +45,9 @@ public class AuthenticationService {
     String token = jwtService.generateToken(user);
 
     return ResponseEntity.ok(AuthenticationResponse.builder()
+        .id(user.getId())
         .token(token)
-        .username(user.getUsername())
+        .username(user.getName())
         .build());
   }
 
@@ -63,7 +64,7 @@ public class AuthenticationService {
     String token = jwtService.generateToken(usr);
     return ResponseEntity.ok(AuthenticationResponse.builder()
         .token(token)
-        .username(usr.getUsername())
+        .username(usr.getName())
         .id(usr.getId())
         .build());
   }

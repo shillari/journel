@@ -42,7 +42,7 @@ public class EntryMapper {
   private static UserAccountJson getUserAccountJson(UserAccount userAccount) {
     return UserAccountJson.builder()
         .id(userAccount.getId())
-        .username(userAccount.getUsername())
+        .username(userAccount.getName())
         .email(userAccount.getEmail())
         .birthday(userAccount.getBirthday())
         .build();

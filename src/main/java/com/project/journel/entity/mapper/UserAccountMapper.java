@@ -21,7 +21,7 @@ public class UserAccountMapper {
   public static UserAccountJson mapToUserJson(UserAccount userAccount) {
     return UserAccountJson.builder()
         .id(userAccount.getId())
-        .username(userAccount.getUsername())
+        .username(userAccount.getName())
         .email(userAccount.getEmail())
         .birthday(userAccount.getBirthday())
         .entries(getAllEntryJson(userAccount.getEntries()))

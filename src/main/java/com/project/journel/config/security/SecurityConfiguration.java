@@ -49,8 +49,8 @@ public class SecurityConfiguration {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
     // Make the below setting as * to allow connection from any host
-    corsConfiguration.setAllowedOrigins(List.of("*"));
-    // corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+    // corsConfiguration.setAllowedOrigins(List.of("*"));
+    corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT"));
     corsConfiguration.setAllowCredentials(true);
     corsConfiguration.setAllowedHeaders(List.of("*"));

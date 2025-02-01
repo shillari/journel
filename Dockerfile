@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/journel-0.0.1-SNAPSHOT.jar journel-0.0.1-SNAPSHOT.jar
 
 # Expose the port application runs on (e.g., 8080)
-EXPOSE 8080
+EXPOSE 8081
 
 # Command to run the application
 ENTRYPOINT ["java", "-jar", "journel-0.0.1-SNAPSHOT.jar"]

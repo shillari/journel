@@ -65,6 +65,7 @@ public class AuthenticationService {
     return ResponseEntity.ok(AuthenticationResponse.builder()
         .token(token)
         .username(usr.getName())
+        .email(usr.getEmail())
         .id(usr.getId())
         .build());
   }

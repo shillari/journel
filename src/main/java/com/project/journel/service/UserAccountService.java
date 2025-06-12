@@ -10,4 +10,6 @@ public interface UserAccountService {
   public ResponseEntity<UserAccountJson> getUserByEmail(String email);
 
   public ResponseEntity<String> deleteUser(RegisterRequest req);
+
+  public ResponseEntity<UserAccountJson> updateUser(RegisterRequest req);
 }

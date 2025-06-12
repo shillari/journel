@@ -1,8 +1,7 @@
 package com.project.journel.entity.database;
 
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.Fetch;
@@ -11,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.journel.entity.Role;
 
 import jakarta.persistence.CascadeType;
@@ -51,8 +51,9 @@ public class UserAccount implements UserDetails {
   @Column(name = "password", nullable = false)
   private String password;
 
+  @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
   @Column(name = "birthday")
-  private Date birthday;
+  private LocalDate birthday;
 
   @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
   @Fetch(value = FetchMode.JOIN)

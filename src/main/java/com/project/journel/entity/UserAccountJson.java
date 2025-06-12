@@ -1,7 +1,6 @@
 package com.project.journel.entity;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,7 +23,7 @@ public class UserAccountJson {
   @JsonProperty("email")
   private String email;
   @JsonProperty("birthday")
-  private Date birthday;
+  private LocalDate birthday;
   @JsonProperty("entries")
   private Set<EntryJson> entries;
 

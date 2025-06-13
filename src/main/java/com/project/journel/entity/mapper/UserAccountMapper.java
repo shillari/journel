@@ -25,6 +25,7 @@ public class UserAccountMapper {
         .email(userAccount.getEmail())
         .birthday(userAccount.getBirthday())
         .entries(getAllEntryJson(userAccount.getEntries()))
+        .photoUrl(userAccount.getPhotoUrl())
         .build();
   }
 

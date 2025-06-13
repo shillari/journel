@@ -26,5 +26,7 @@ public class UserAccountJson {
   private LocalDate birthday;
   @JsonProperty("entries")
   private Set<EntryJson> entries;
+  @JsonProperty("photoUrl")
+  private String photoUrl;
 
 }

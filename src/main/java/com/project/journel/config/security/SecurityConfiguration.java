@@ -31,7 +31,7 @@ public class SecurityConfiguration {
         .cors(c -> c.configurationSource(corsConfigurationSource()))
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(rq -> {
-          rq.requestMatchers("/api/v1/auth/**").permitAll();
+          rq.requestMatchers("/api/v1/auth/**", "/actuator/**").permitAll();
           rq.anyRequest().authenticated();
           // rq.requestMatchers("/api/v1/entry/**").authenticated();
         });

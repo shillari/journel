@@ -10,6 +10,8 @@ public interface EntryService {
 
   ResponseEntity<EntryJson> createEntry(Long userId, EntryJson entryJson);
 
+  ResponseEntity<EntryJson> updateEntry(Long userId, EntryJson entryJson);
+
   ResponseEntity<EntryJson> getEntry(Long userId, Long entryId);
 
   ResponseEntity<String> deleteEntry(Long userId, Long entryId);

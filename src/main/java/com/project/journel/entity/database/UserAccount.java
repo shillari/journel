@@ -55,6 +55,9 @@ public class UserAccount implements UserDetails {
   @Column(name = "birthday")
   private LocalDate birthday;
 
+  @Column(name = "photo_url")
+  private String photoUrl;
+
   @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
   @Fetch(value = FetchMode.JOIN)
   private Set<Entry> entries;

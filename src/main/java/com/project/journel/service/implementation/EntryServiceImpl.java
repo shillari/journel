@@ -26,6 +26,7 @@ import com.project.journel.repository.UserAccountRepository;
 import com.project.journel.service.EntryService;
 import com.project.journel.service.RedisService;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -151,6 +152,52 @@ public class EntryServiceImpl implements EntryService {
     }
 
     return ResponseEntity.ok(entriesJson);
+  }
+
+  @Override
+  @Transactional
+  public ResponseEntity<EntryJson> updateEntry(Long userId, EntryJson entryJson) {
+    // Verify if the user exists
+    Optional<UserAccount> user = userRepository.findById(userId);
+    if (user == null || !user.isPresent()) {
+      return ResponseEntity
+          .status(HttpStatus.NO_CONTENT).build();
+    }
+
+    // Save the entry
+    Optional<Entry> opEntry = entryRepository.findById(entryJson.getId());
+    // Entry entry = EntryMapper.mapToEntryDb(entryJson, user.get());
+    if (opEntry == null || !opEntry.isPresent()) {
+      return ResponseEntity
+          .status(HttpStatus.NO_CONTENT).build();
+    }
+
+    Entry entry = opEntry.get();
+
+    redisService.deleteEntry(userId, entry.getId());
+
+    entry.setTitle(entryJson.getTitle());
+    entry.setDescription(entryJson.getDescription());
+    entry.setEntryDate(entryJson.getEntryDate());
+
+    // Save all entry tags
+    Set<Tag> tags = new HashSet<>();
+    for (TagJson tagJson : entryJson.getTags()) {
+      Tag tag = tagRepository.findByTagName(tagJson.getTagName())
+          .orElseGet(() -> tagRepository.save(TagMapper.mapToTagDb(tagJson)));
+      tags.add(tag);
+
+      // Save tag by user for entry in Redis.
+      redisService.addEntryToTagForUser(user.get().getId(), tag.getTagName(), entry.getId());
+    }
+
+    Optional<Category> category = categoryRepository.findByCategoryName(entryJson.getCategory().getCategoryName());
+
+    entry.setCategory(category.get());
+    entry.setTags(tags);
+    entryRepository.save(entry);
+
+    return ResponseEntity.ok(EntryMapper.matToEntryJson(entry));
   }
 
 }

@@ -51,7 +51,7 @@ public class UserAccount implements UserDetails {
   @Column(name = "password", nullable = false)
   private String password;
 
-  @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+  @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   @Column(name = "birthday")
   private LocalDate birthday;
 

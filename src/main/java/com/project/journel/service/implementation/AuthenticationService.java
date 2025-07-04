@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import com.project.journel.entity.database.UserAccount;
 import com.project.journel.repository.UserAccountRepository;
 import com.project.journel.requestdata.AuthenticationRequest;
 import com.project.journel.requestdata.AuthenticationResponse;
+import com.project.journel.requestdata.PasswordRequest;
 import com.project.journel.requestdata.RegisterRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -48,6 +51,7 @@ public class AuthenticationService {
         .id(user.getId())
         .token(token)
         .username(user.getName())
+        .email(user.getEmail())
         .build());
   }
 
@@ -62,11 +66,42 @@ public class AuthenticationService {
 
     UserAccount usr = user.get();
     String token = jwtService.generateToken(usr);
+    
     return ResponseEntity.ok(AuthenticationResponse.builder()
         .token(token)
         .username(usr.getName())
         .email(usr.getEmail())
         .id(usr.getId())
+        .photoUrl(usr.getPhotoUrl())
+        .build());
+  }
+
+  public ResponseEntity<AuthenticationResponse> updatePassword(PasswordRequest req) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String jwtUsername = authentication.getName(); 
+    
+    Optional<UserAccount> user = repository.findByEmail(req.getEmail());
+    if (user == null || !user.isPresent()) {
+      return ResponseEntity
+          .status(HttpStatus.NO_CONTENT).build();
+    }
+
+    if (!user.get().getEmail().equals(jwtUsername) || !passwordEncoder.matches(req.getCurrPass(), user.get().getPassword())) {
+      return ResponseEntity
+          .status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    user.get().setPassword(passwordEncoder.encode(req.getNewPass()));
+    repository.save(user.get());
+
+    UserAccount usr = user.get();
+    String token = jwtService.generateToken(usr);
+    return ResponseEntity.ok(AuthenticationResponse.builder()
+        .token(token)
+        .username(usr.getName())
+        .email(usr.getEmail())
+        .id(usr.getId())
+        .photoUrl(usr.getPhotoUrl())
         .build());
   }
 

@@ -1,6 +1,6 @@
 package com.project.journel.requestdata;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,12 +11,13 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
-
-  private Long id;
-  @JsonIgnore
-  private String token;
-  private String username;
+public class PasswordRequest {
+  
+  @JsonProperty("email")
   private String email;
-  private String photoUrl;
+  @JsonProperty("curr_pass")
+  private String currPass;
+  @JsonProperty("new_pass")
+  private String newPass;
+
 }

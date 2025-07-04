@@ -11,8 +11,10 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,17 +30,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(@NonNull HttpServletRequest request,
       @NonNull HttpServletResponse response,
       @NonNull FilterChain filterChain) throws ServletException, IOException {
-    final String authHeader = request.getHeader("Authorization");
-    final String jwt;
-    final String userEmail;
+    try {
+      String jwt = null;
+    String userEmail = null;
 
-    // If the token it is not in the request, call the next filter
-    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+    if (request.getCookies() != null) {
+      for (Cookie cookie : request.getCookies()) {
+        if ("token".equals(cookie.getName())) {
+          jwt = cookie.getValue();
+          break;
+        }
+      }
+    }
+
+    if (jwt == null) {
       filterChain.doFilter((request), response);
       return;
     }
-    
-    jwt = authHeader.substring(7);
+
     userEmail = jwtService.extractUsername(jwt);
 
     if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
@@ -51,6 +60,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       }
     }
     filterChain.doFilter(request, response);
+    } catch (ExpiredJwtException e) {
+      response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+      response.getWriter().write("Token expired");
+    }
+    
   }
 
 }

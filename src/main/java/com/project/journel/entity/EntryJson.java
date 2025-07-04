@@ -1,5 +1,6 @@
 package com.project.journel.entity;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Set;
 
@@ -25,8 +26,8 @@ public class EntryJson {
   @JsonProperty("description")
   private String description;
   @JsonProperty("entry_date")
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
-  private Date entryDate;
+  @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  private LocalDate entryDate;
   @JsonProperty("category")
   private CategoryJson category;
   @JsonProperty("tags")

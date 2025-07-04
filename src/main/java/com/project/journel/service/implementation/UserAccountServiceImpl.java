@@ -8,12 +8,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.journel.entity.UserAccountJson;
 import com.project.journel.entity.database.UserAccount;
 import com.project.journel.entity.mapper.UserAccountMapper;
 import com.project.journel.repository.UserAccountRepository;
+import com.project.journel.requestdata.PasswordRequest;
 import com.project.journel.requestdata.RegisterRequest;
 import com.project.journel.service.UserAccountService;
 
@@ -56,7 +58,7 @@ public class UserAccountServiceImpl implements UserAccountService {
   @Override
   public ResponseEntity<UserAccountJson> updateUser(RegisterRequest req) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String jwtUsername = authentication.getName(); 
+    String jwtUsername = authentication.getName();
     
     Optional<UserAccount> user = userAccountRepository.findByEmail(req.getEmail());
     if (user == null || !user.isPresent()) {
@@ -64,8 +66,6 @@ public class UserAccountServiceImpl implements UserAccountService {
           .status(HttpStatus.NO_CONTENT).build();
     }
 
-    System.out.println("NAME: " + user.get().getUsername());
-    System.out.println("JWT NAME: " + jwtUsername);
     if (!user.get().getEmail().equals(jwtUsername)) {
       return ResponseEntity
           .status(HttpStatus.UNAUTHORIZED).build();
@@ -73,13 +73,14 @@ public class UserAccountServiceImpl implements UserAccountService {
 
     user.get().setUsername(req.getUsername());
     user.get().setBirthday(req.getBirthday());
-    // TODO set image
+    user.get().setPhotoUrl(req.getPhotoUrl());
     userAccountRepository.save(user.get());
 
     return ResponseEntity.ok().body(UserAccountJson.builder()
             .birthday(user.get().getBirthday())
             .email(user.get().getEmail())
             .username(user.get().getName())
+            .photoUrl(user.get().getPhotoUrl())
             .build());
   }
 

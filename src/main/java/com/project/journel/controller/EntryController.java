@@ -54,4 +54,5 @@ public class EntryController {
   public ResponseEntity<EntryJson> updateEntry(@RequestParam Long userId, @RequestBody EntryJson entryJson) {
     return entryService.updateEntry(userId, entryJson);
   }
+
 }

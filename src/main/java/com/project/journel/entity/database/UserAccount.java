@@ -51,9 +51,12 @@ public class UserAccount implements UserDetails {
   @Column(name = "password", nullable = false)
   private String password;
 
-  @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+  @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   @Column(name = "birthday")
   private LocalDate birthday;
+
+  @Column(name = "photo_url")
+  private String photoUrl;
 
   @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL)
   @Fetch(value = FetchMode.JOIN)

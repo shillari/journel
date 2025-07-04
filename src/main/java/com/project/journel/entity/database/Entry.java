@@ -1,8 +1,10 @@
 package com.project.journel.entity.database;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,7 +42,8 @@ public class Entry {
   private String description;
 
   @Column(name = "entry_date")
-  private Date entryDate;
+  @JsonFormat(shape= JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  private LocalDate entryDate;
 
   @ManyToOne
   @JoinColumn(name = "category_id", nullable = true)

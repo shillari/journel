@@ -7,6 +7,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,7 @@ import com.project.journel.entity.database.Tag;
 import com.project.journel.entity.database.UserAccount;
 import com.project.journel.entity.mapper.EntryMapper;
 import com.project.journel.entity.mapper.TagMapper;
+import com.project.journel.entity.pagination.EntryPageResponse;
 import com.project.journel.repository.CategoryRepository;
 import com.project.journel.repository.EntryRepository;
 import com.project.journel.repository.TagRepository;
@@ -133,6 +138,30 @@ public class EntryServiceImpl implements EntryService {
     }
 
     return ResponseEntity.ok(entriesJson);
+  }
+
+  public ResponseEntity<EntryPageResponse> getAllEntries(Long userId, int page, int size) {
+
+    // Verify if the user exists
+    Optional<UserAccount> user = userRepository.findById(userId);
+    if (user == null || !user.isPresent()) {
+      return ResponseEntity
+          .status(HttpStatus.NO_CONTENT).build();
+    }
+
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Entry> result = entryRepository.findAllByUserAccountId(userId, pageable);
+    List<EntryJson> entriesJson = new ArrayList<>();
+    for (Entry entry : result.getContent()) {
+      entriesJson.add(EntryMapper.matToEntryJson(entry));
+    }
+    EntryPageResponse response = new EntryPageResponse(
+      entriesJson,
+      result.getTotalPages(),
+      result.getTotalElements()
+    );
+
+    return ResponseEntity.ok(response);
   }
 
   @Override

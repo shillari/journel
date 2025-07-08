@@ -2,6 +2,7 @@ package com.project.journel.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.journel.entity.EntryJson;
+import com.project.journel.entity.pagination.EntryPageResponse;
 import com.project.journel.service.EntryService;
 
 import lombok.RequiredArgsConstructor;
@@ -43,6 +45,13 @@ public class EntryController {
   public ResponseEntity deleteEntry(@RequestParam Long userId, @RequestParam Long entryId) {
     entryService.deleteEntry(userId, entryId);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/entries/page")
+  public ResponseEntity<EntryPageResponse> getAllEntries(@RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size,
+        @RequestParam Long userId) {
+    return entryService.getAllEntries(userId, page, size);
   }
 
   @GetMapping("/entries")

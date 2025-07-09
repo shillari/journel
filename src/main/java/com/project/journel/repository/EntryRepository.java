@@ -3,6 +3,8 @@ package com.project.journel.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +16,8 @@ import com.project.journel.entity.database.UserAccount;
 public interface EntryRepository extends JpaRepository<Entry, Long> {
 
   Optional<Entry> findByIdAndUserAccount(Long id, UserAccount userAccount);
+
+  Page<Entry> findAllByUserAccountId(Long userId, Pageable pageable);
 
   @Modifying
   @Query("DELETE FROM Entry e WHERE e.id = :entryId")

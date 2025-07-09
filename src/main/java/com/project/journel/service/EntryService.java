@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.ResponseEntity;
 
 import com.project.journel.entity.EntryJson;
+import com.project.journel.entity.pagination.EntryPageResponse;
 
 public interface EntryService {
 
@@ -19,4 +20,6 @@ public interface EntryService {
   ResponseEntity<List<EntryJson>> getEntriesByTag(Long userId, String tagName);
 
   ResponseEntity<List<EntryJson>> getAllEntriesByUser(Long userId);
+
+  ResponseEntity<EntryPageResponse> getAllEntries(Long userId, int page, int size);
 }

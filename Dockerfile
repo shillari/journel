@@ -13,5 +13,8 @@ RUN chmod +x mvnw
 # Build the jar 
 RUN ./mvnw clean package -DskipTests
 
+# Move the built jar to root /app directory
+RUN mv target/journel-0.0.1-SNAPSHOT.jar app.jar
+
 # Command to run the application
-CMD ["java", "-jar", "target/journel-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "app.jar"]

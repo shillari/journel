@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.journel.entity.EntryJson;
 import com.project.journel.entity.TagJson;
@@ -31,7 +31,6 @@ import com.project.journel.repository.UserAccountRepository;
 import com.project.journel.service.EntryService;
 import com.project.journel.service.RedisService;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -45,6 +44,7 @@ public class EntryServiceImpl implements EntryService {
   private final RedisService redisService;
 
   @Override
+  @Transactional(rollbackFor = RuntimeException.class)
   public ResponseEntity<EntryJson> createEntry(Long userId, EntryJson entryJson) {
 
     // Verify if the user exists
@@ -53,28 +53,31 @@ public class EntryServiceImpl implements EntryService {
       return ResponseEntity
           .status(HttpStatus.NO_CONTENT).build();
     }
+    
+    try {
+      // Save the entry
+      Entry entry = EntryMapper.mapToEntryDb(entryJson, user.get());
+      entryRepository.save(entry);
+      entryJson.setId(entry.getId());
 
-    // Save the entry
-    Entry entry = EntryMapper.mapToEntryDb(entryJson, user.get());
-    entryRepository.save(entry);
-    entryJson.setId(entry.getId());
+      // Save all entry tags
+      Set<Tag> tags = new HashSet<>();
+      for (TagJson tagJson : entryJson.getTags()) {
+        Tag tag = tagRepository.findByTagName(tagJson.getTagName())
+            .orElseGet(() -> tagRepository.save(TagMapper.mapToTagDb(tagJson)));
+        tags.add(tag);
 
-    // Save all entry tags
-    Set<Tag> tags = new HashSet<>();
-    for (TagJson tagJson : entryJson.getTags()) {
-      Tag tag = tagRepository.findByTagName(tagJson.getTagName())
-          .orElseGet(() -> tagRepository.save(TagMapper.mapToTagDb(tagJson)));
-      tags.add(tag);
+        // Save tag by user for entry in Redis.
+        redisService.addEntryToTagForUser(user.get().getId(), tag.getTagName(), entry.getId());
+      }
 
-      // Save tag by user for entry in Redis.
-      redisService.addEntryToTagForUser(user.get().getId(), tag.getTagName(), entry.getId());
+      Optional<Category> category = categoryRepository.findByCategoryName(entryJson.getCategory().getCategoryName());
+      entry.setCategory(category.get());
+      entry.setTags(tags);
+      entryRepository.save(entry);
+    } catch (Exception e) {
+      throw new RuntimeException("Fail to create entry: " + e);
     }
-
-    Optional<Category> category = categoryRepository.findByCategoryName(entryJson.getCategory().getCategoryName());
-
-    entry.setCategory(category.get());
-    entry.setTags(tags);
-    entryRepository.save(entry);
 
     return ResponseEntity.ok(entryJson);
   }

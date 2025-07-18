@@ -8,6 +8,8 @@ WORKDIR /app
 COPY target/journel-0.0.1-SNAPSHOT.jar journel-0.0.1-SNAPSHOT.jar
 COPY src/main/resources/keystore.p12 /app/keystore.p12
 
+RUN apk update && apk add ca-certificates
+
 # Expose the port application runs on (e.g., 8080)
 EXPOSE 8081
 

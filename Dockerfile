@@ -7,11 +7,11 @@ WORKDIR /app
 # Copy source code
 COPY . .
 
+# Make mvnw executable
+RUN chmod +x mvnw
+
 # Build the jar 
 RUN ./mvnw clean package -DskipTests
-
-# Expose the port application runs on (e.g., 8080)
-EXPOSE 8081
 
 # Command to run the application
 CMD ["java", "-jar", "target/journel-0.0.1-SNAPSHOT.jar"]

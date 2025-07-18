@@ -50,7 +50,7 @@ public class SecurityConfiguration {
     CorsConfiguration corsConfiguration = new CorsConfiguration();
     // Make the below setting as * to allow connection from any host
     // corsConfiguration.setAllowedOrigins(List.of("*"));
-    corsConfiguration.setAllowedOrigins(List.of("https://localhost:5173"));
+    corsConfiguration.setAllowedOrigins(List.of("https://journel-react.netlify.app"));
     corsConfiguration.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT"));
     corsConfiguration.setAllowCredentials(true);
     corsConfiguration.setAllowedHeaders(List.of("*"));

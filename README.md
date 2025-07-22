@@ -2,6 +2,11 @@
 
 Journel Backend is a Spring Boot application that provides a RESTful API for managing users, journal entries, categories, and tags. It integrates with PostgreSQL for persistent storage and Redis for caching frequently accessed data. The application supports JWT authentication and is containerized using Docker.
 
+> ✅ **Live API**: [https://journel.onrender.com](https://journel.onrender.com)  
+> 🧠 **Redis** is hosted on [Redis Enterprise Cloud](https://redis.com/redis-enterprise-cloud/)
+
+---
+
 ## ✨ Features
 - User authentication with JWT
 - CRUD operations for journal entries, categories, and tags

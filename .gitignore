@@ -6,6 +6,7 @@ target/
 .env
 docker-compose.yml
 src/main/resources/keystore.p12
+src/main/resources/talkie-*
 
 ### STS ###
 .apt_generated

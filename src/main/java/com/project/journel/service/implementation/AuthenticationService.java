@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.project.journel.config.firebase.FirebaseInitializer;
 import com.project.journel.config.security.JwtService;
 import com.project.journel.entity.Role;
 import com.project.journel.entity.database.UserAccount;
@@ -30,6 +31,7 @@ public class AuthenticationService {
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
   private final AuthenticationManager authenticationManager;
+  private final FirebaseInitializer firebaseInitializer;
 
   public ResponseEntity<AuthenticationResponse> register(RegisterRequest request) {
     UserAccount user = UserAccount.builder()
@@ -66,9 +68,10 @@ public class AuthenticationService {
 
     UserAccount usr = user.get();
     String token = jwtService.generateToken(usr);
-    
+    String firebaseToken = firebaseInitializer.createFirebaseCustomToken(String.valueOf(usr.getId()));
     return ResponseEntity.ok(AuthenticationResponse.builder()
         .token(token)
+        .firebaseToken(firebaseToken)
         .username(usr.getName())
         .email(usr.getEmail())
         .id(usr.getId())
